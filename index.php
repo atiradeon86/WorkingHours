@@ -4,9 +4,11 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>
     <script src="./js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
     
     <script type="text/javascript">
     
@@ -32,6 +34,7 @@
                     extendedProps: {
                         StartTime: result[i].StartTime,
                         EndTime: result[i].EndTime,
+                        Id: result[i].id,
                     },
                 });
             });
@@ -59,6 +62,8 @@
                         //console.log(Startpart1,Startpart2);
                         //console.log(Endtpart1,Endtpart2);
                         
+                        var eventId = info.event.extendedProps.Id;
+                        console.log(eventId);
                         //Creating time objects
 
                         StartTime = new Date();
@@ -96,7 +101,10 @@
                 locale: 'de',
                 events: events,
                 select: function(datetime){
-
+                    var ActualDay = moment(datetime.start).format('YYYY-MM-DD');
+                    $('#start_date').val(ActualDay);
+                    $('#end_date').val(ActualDay);
+                    console.log(ActualDay);
                     $('#AddNewWork').modal('show');
                 },
                 });
@@ -184,6 +192,18 @@
     .modal-header {
     border-bottom: 0 none;
 }
+.form-control  {
+    height: 50px;
+}
+select.form-control {
+    height: 50px!IMportant; 
+
+    display: block;
+}
+
+.modal-footer {
+    margin-top: 20px!Important;
+}
 
 </style>
 </head>
@@ -197,7 +217,7 @@
             <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add New Work</h5>
+                    <h5 class="modal-title">Add New Work / Event</h5>
                 </div>
                 <form action="" method="post" id="SubmitEvent">
                     <div class="modal-body">
@@ -205,12 +225,70 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                    <label for "event_name">Add New Work</label>
-                                    <input type="text" name="event_name" id="event_name" class="form-control clear-form">
+                                    <label for "work_name">Title</label>
+                                    <input type="text" name="work_name" id="work_name" class="form-control clear-form">
                                 </div>
                             </div>
+                            <div class="col-sm-12">
+                                    <div class="form-group">
+                                    <label for "reason">Work Reason</label>
+                                    <select class="form-control" name="reason">
+                                        <option>Please Select</option>
+                                        <option>HomeOffice</option>
+                                        <option>Urlaub</option>
+                                        <option>What street did you grow up on?</option>
+                                        <option>Zeitausgleich</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
                         
-                    </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                    <label for "start_date">Date</label>
+                                    <input type="date" name="start_date" id="start_date" class="form-control clear-form">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                    <div class="form-group">
+                                    <label for "end_date">End Date</label>
+                                    <input type="date" name="end_date" id="end_date" class="form-control clear-form">
+                                </div>
+                            </div>
+                            </div>
+                            <div class="row">                      
+                                <div class="col-sm-6">
+                                        <div class="form-group">
+                                        <label for "start_time">Start Time</label>
+                                        <input type="time" name="start_time"  id="start_time" class="form-control" value="08:00"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                        <div class="form-group">
+                                        <label for "time">End Time</label>
+                                        <input type="time" name="end_time" id="end_time" class="form-control" value="17:00">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">                      
+                                <div class="col-sm-6">
+                                        <div class="form-group">
+                                        <label for "Color">Start Time</label>
+                                        <input type="color" name="color" value="#1a252f" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                        <div class="form-group">
+                                        <label for "time">Url</label>
+                                        <input type="text" name="url" id="url" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                            
+
+                           
+                   
                 <div class="modal-footer"> 
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary">Save changes</button>
