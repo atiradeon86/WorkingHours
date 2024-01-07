@@ -1,3 +1,7 @@
+<?php ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -6,11 +10,31 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>
     <script src="./js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
     
     <script type="text/javascript">
+
+    function dateConvert(date) {
+
+    var mssqlDateTime = date;
+    var dateObject = new Date(mssqlDateTime);
+
+    var year = dateObject.getFullYear();
+    var month = (dateObject.getMonth() + 1).toString().padStart(2, '0');
+    var day = dateObject.getDate().toString().padStart(2, '0');
+    var hours = dateObject.getHours().toString().padStart(2, '0');
+    var minutes = dateObject.getMinutes().toString().padStart(2, '0');
+    var seconds = dateObject.getSeconds().toString().padStart(2, '0');
+    var formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`; 
+    return  formattedDateTime
+   
+}
+
+
+
+
     
     function getAllEvent()
     {
@@ -23,12 +47,16 @@
                 var result = data;
                 
             $.each(result, function(i, item) {
+                start = result[i].start_date.date;
+                end = result[i].end_date.date;
+                startConverted= dateConvert(start);
+                endConverted= dateConvert(end);
                 events.push({
-
+                
                     event_id : result[i].id,
                     title : result[i].event_name,
-                    start: result[i].start_date,
-                    end: result[i].end_date,
+                    start: startConverted,
+                    end: endConverted,
                     color: result[i].color,
                     link: result[i].link,
                     extendedProps: {
@@ -38,54 +66,34 @@
                     },
                 });
             });
-            console.log(events);
+            //console.log(events);
             
                 var calendarEl = document.getElementById('calendar');
                 var calendar = new FullCalendar.Calendar(calendarEl, {
                     height: 860,
                     eventClick: function(info) {
 
-                        // Split the time to int
-                        var starth =  info.event.extendedProps.StartTime
-                        var endh = info.event.extendedProps.EndTime
-                        
-                        var EndtimeParts = endh.split(':');
-                        var Endtpart1 = parseInt(EndtimeParts[0], 10);
-                        var Endtpart2 = parseInt(EndtimeParts[1], 10);
+                       var hoursinner = document.getElementById('hs');
 
-                        var StarttimeParts = starth.split(':');
-                        var Startpart1 = parseInt(StarttimeParts[0], 10);
-                        var Startpart2 = parseInt(StarttimeParts[1], 10);
-                        
-
-                        //debug
-                        //console.log(Startpart1,Startpart2);
-                        //console.log(Endtpart1,Endtpart2);
-                        
-                        var eventId = info.event.extendedProps.Id;
-                        console.log(eventId);
-                        //Creating time objects
-
-                        StartTime = new Date();
-                        StartTime.setHours(Startpart1,Startpart2,0);
-
-                        EndTime = new Date();
-                        EndTime.setHours(Endtpart1,Endtpart2,0);
-
-                        var StartMinutesFormatted = ("0" + StartTime.getMinutes()).slice(-2);
-                        var StartHoursFormatted = ("0" + StartTime.getHours()).slice(-2);
-                        
-                        var EndMinutesFormatted = ("0" + EndTime.getMinutes()).slice(-2);
-                        var EndHoursFormatted = ("0" + EndTime.getHours()).slice(-2);
-
-                        var hoursinner = document.getElementById('hs');
-                        //alert(info.event.title)
-                        //alert(info.event.extendedProps.StartTime)
+                       var eventId = info.event.extendedProps.Id;
+                       var start = info.event.extendedProps.StartTime['date'];
+                      
+                       var startsplit = start.split(" ");
+                      
+                       startsplitfinal = startsplit[1].split(".");
+                       
+                      
+                       var end = info.event.extendedProps.EndTime['date'];
+                       var endsplit = end.split(" ");
+                       endsplitfinal = endsplit[1].split(".");
+                      
+                    
                         if (hoursinner != null) {
                             hoursinner.remove();
                         }
                         var hours = document.getElementById('hours');
-                        var hoursdata = "<div id='hs'><br><i class='bi bi-clock-fill' style='margin-right:30px;'></i>" + StartHoursFormatted + ":" + StartMinutesFormatted +  "-"+  EndHoursFormatted + ":" + EndMinutesFormatted + "</div>"
+                        var hoursdata = "<div id='hs'><br><i class='bi bi-clock-fill' style='margin-right:30px;'></i>" + startsplitfinal[0] +  "-"+  endsplitfinal[0] +
+                        "<form action='' method='post' id='EditEvent'><input type='submit' class='btn btn-primary' id='edit' style='display:block;' event=" + eventId +" value='Edit'><div id='edit-id' style='display:none;'>" + eventId + "</div></form></div>";
                         hours.innerHTML += hoursdata
                     
                 },
@@ -94,17 +102,17 @@
                     center: 'title',
                     right: 'dayGridMonth',
                 },
-                navlinks: true,
                 selectable: true,
                 editable: true,
                 firstDay: 1,
+                displayEventTime: false,
                 locale: 'de',
                 events: events,
                 select: function(datetime){
                     var ActualDay = moment(datetime.start).format('YYYY-MM-DD');
                     $('#start_date').val(ActualDay);
                     $('#end_date').val(ActualDay);
-                    console.log(ActualDay);
+                   
                     $('#AddNewWork').modal('show');
                 },
                 });
@@ -116,7 +124,7 @@
 
     $(document).ready(function(){
     $('body').on( 'submit', '#SubmitEvent', function(e) {
-                    e.preventDefault();
+                   
                         $.ajax({
                             type: "POST",
                             url: "functions.php?cmd=addwork",
@@ -128,6 +136,69 @@
 
                         });
                     });
+
+                    $('body').on( 'submit', '#EditEvent', function(e) {
+                    e.preventDefault();
+                    var id = $('#edit-id').text();
+                    var AjaxEditUrl = "functions.php?cmd=edit&id=" + id;
+                    var EditData = new Array();
+                    $.ajax({
+                            type: "POST",
+                            url: AjaxEditUrl,
+                            dataType : "json",
+                            success : function(data) {
+                                var result = data;
+                                $.each(result, function(i, item) {
+                                    EditData.push({
+
+                                        event_id : result[i].id,
+                                        title : result[i].event_name,
+                                        start: result[i].start_date,
+                                        end: result[i].end_date,
+                                        color: result[i].color,
+                                        link: result[i].link,
+                                        work_reason : result[i].work_reason, 
+                                        StartTime: result[i].StartTime,
+                                        EndTime: result[i].EndTime
+                                    ,
+                                    });
+                                 });
+                                 //console.log(EditData[0].StartTime.date);
+                                 var title = (EditData[0].title);
+                                 var event_id = (EditData[0].event_id);
+                                 var color = (EditData[0].color);
+                                 var reason = (EditData[0].work_reason);
+                                 var start = (EditData[0].start.date);
+                                
+                                 var end = (EditData[0].end.date);
+                                 var link  = (EditData[0].link);
+                                 var StartTime = (EditData[0].StartTime.date);
+                              
+                                 var EndTime = (EditData[0].EndTime.date);
+                                 EndtimeSplit = EndTime.split(" ");
+                                 EndTimeSplitfinal = EndtimeSplit[1].split(".");
+                                //console.log(EndTimeSplitfinal)
+
+                                 var startSplit = start. split(" ");
+                                 var endSplit = end. split(" ");
+                                starTtimeSplit = StartTime.split(" ");
+                                startTimeSplitfinal = starTtimeSplit[1].split(".");
+                                //console.log(startTimeSplitfinal[0])
+                                 
+                                $('input[name="work_name"]').val(title);
+                                 $('input[name="color"]').val(color);
+                                 $('input[name="url"]').val(link);
+                                 $('#reason').val(reason);
+                                 $('input[name="start_date"]').val(startSplit[0]);
+                                 $('input[name="start_time"]').val(startTimeSplitfinal[0]);
+                                 $('input[name="end_time"]').val(EndTimeSplitfinal[0]);
+                                 $('input[name="end_date"]').val(endSplit[0]);
+                                 $('#AddNewWork').modal('show');  
+                            },
+
+                        });
+                    });
+
         })
 
 </script>
@@ -156,7 +227,7 @@
     .fc .fc-col-header-cell-cushion {
         padding:4px 4px;
     }
-    .fc-h-event .fc-event-main {
+    .fc-h-event .fc-event-main, .fc-daygrid-event-harness {
         height: 50px;
         color: #1a252f;
         background: #1a252f;
@@ -191,19 +262,28 @@
     }
     .modal-header {
     border-bottom: 0 none;
-}
-.form-control  {
-    height: 50px;
-}
-select.form-control {
-    height: 50px!IMportant; 
+    }
+    .form-control  {
+        height: 50px;
+    }
+    select.form-control {
+        height: 50px!IMportant; 
 
-    display: block;
-}
+        display: block;
+    }
 
-.modal-footer {
-    margin-top: 20px!Important;
-}
+    .modal-footer {
+        margin-top: 20px!Important;
+    }
+
+    .fc-direction-ltr .fc-daygrid-event.fc-event-end {
+        height: 50px;
+        color: #1a252f;
+    }
+
+    .fc-daygrid-event-dot {
+        color: #1a252f;
+    }
 
 </style>
 </head>
@@ -232,11 +312,10 @@ select.form-control {
                             <div class="col-sm-12">
                                     <div class="form-group">
                                     <label for "reason">Work Reason</label>
-                                    <select class="form-control" name="reason">
+                                    <select class="form-control" name="reason" id="reason">
                                         <option>Please Select</option>
                                         <option>HomeOffice</option>
                                         <option>Urlaub</option>
-                                        <option>What street did you grow up on?</option>
                                         <option>Zeitausgleich</option>
                                     </select>
                                 </div>
@@ -273,7 +352,7 @@ select.form-control {
                             <div class="row">                      
                                 <div class="col-sm-6">
                                         <div class="form-group">
-                                        <label for "Color">Start Time</label>
+                                        <label for "Color">Color</label>
                                         <input type="color" name="color" value="#1a252f" class="form-control" />
                                     </div>
                                 </div>
@@ -284,18 +363,12 @@ select.form-control {
                                     </div>
                                 </div>
                             </div>
-
-                            
-
-                           
-                   
-                <div class="modal-footer"> 
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save changes</button>
-                </div>
+                    <div class="modal-footer"> 
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="edit">Save changes</button>
+                    </div>
                 </form>
             </div>
         </div>
-
     </body>
 </html>

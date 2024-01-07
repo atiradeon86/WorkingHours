@@ -34,6 +34,9 @@ elseif (!empty($_GET['cmd']) && $_GET['cmd'] == 'addwork') {
      $color = $_POST['color'];
     $url = $_POST['url'];
     
+    // Test
+    
+
     $sql = "INSERT INTO dbo.Workinghours 
     (event_name,description,link,start_date,end_date,StartTime,EndTime,color,work_reason) 
     VALUES('$title','$description','$url','$start_date','$end_date','$start_time','$end_time','$color','$reason')";
@@ -56,6 +59,14 @@ elseif (!empty($_GET['cmd']) && $_GET['cmd'] == 'addwork') {
 
     $json['status'] = true; 
     echo json_encode($json);
+} elseif (!empty($_GET['cmd']) && $_GET['cmd'] == 'edit') {
+    $id = $_GET['id'];
+    $sql = "SELECT id,event_name,color,link,start_date,end_date,StartTime,EndTime,work_reason FROM dbo.WorkingHours WHERE id=$id";  
+    $stmt = sqlsrv_query($conn, $sql);
+    while( $row = sqlsrv_fetch_array( $stmt, SQLSRV_FETCH_ASSOC )) {
+        $EditArray[]= $row;
+    }
+    echo json_encode($EditArray);
 }
 
 ?>
