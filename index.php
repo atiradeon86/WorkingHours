@@ -319,7 +319,7 @@ $.ajax({
     }
 
     .modal-footer {
-        margin-top: 20px!Important;
+        margin-top: 20px;
     }
 
     .fc-direction-ltr .fc-daygrid-event.fc-event-end {
@@ -343,7 +343,17 @@ $.ajax({
 
 @media only screen and (max-width: 1024px) {
 
+h5.modal-title, input#work_name, input#url  {
+    display: none;
+   
+}
+label.work_name, label.url,.modal-header {
+    display:none!important;
+}
         
+.modal-footer {
+    margin-top:0px!Important;
+}
 #wrapper {
         display: block;
         position: relative;
@@ -421,10 +431,6 @@ $.ajax({
         display: block;
     }
 
-    .modal-footer {
-        margin-top: 20px!Important;
-    }
-
     .fc-direction-ltr .fc-daygrid-event.fc-event-end {
      
         color: #1a252f;
@@ -458,7 +464,7 @@ $.ajax({
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                    <label for "work_name">Title</label>
+                                    <label for "work_name" class="work_name">Title</label>
                                     <input type="text" name="work_name" id="work_name" class="form-control clear-form">
                                 </div>
                             </div>
@@ -511,7 +517,7 @@ $.ajax({
                                 </div>
                                 <div class="col-sm-6">
                                         <div class="form-group">
-                                        <label for "time">Url</label>
+                                        <label for "url" class="url">Url</label>
                                         <input type="text" name="url" id="url" class="form-control">
                                         <input type="hidden" name ="work_id" id="work_id">
                                     </div>
