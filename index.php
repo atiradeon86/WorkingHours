@@ -117,7 +117,7 @@ $.ajax({
                          var color = info.event.extendedProps.Color;
                          //console.log(color);
                         var hours = document.getElementById('hours');
-                        var hoursdata = "<div id='hs'><i class='bi bi-clock-fill' style='margin-right:30px;'></i>" + startsplitfinal[0].substring(0, 5) +  "-"+  endsplitfinal[0].substring(0, 5); + "<span id='reason' style='color:" + color + "!important;'>"  + showreason + "</span>" + 
+                        var hoursdata = "<div id='hs'><i class='bi bi-clock-fill' style='margin-right:30px;'></i>" + startsplitfinal[0].substring(0, 5) +  "-"+  endsplitfinal[0].substring(0, 5) + "<span id='reason' style='color:" + color + "!important;'>"  + showreason + "</span>" + 
                         "<form action='' method='post' id='EditEvent'><input type='submit' class='btn btn-primary' id='edit' class=" + eventId +" value='Edit'><div id='edit-id' style='display:none;'>" + eventId + "</div></form></div>";
                         hours.innerHTML += hoursdata
                     
