@@ -1,11 +1,13 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="#000000"
+    android:backgroundTint="#000000"
+    android:backgroundTintMode="add"
     android:gravity="center"
+    android:orientation="vertical"
     android:padding="16dp"
     tools:context=".MainActivity">
 
@@ -13,6 +15,9 @@
         android:id="@+id/authenticateButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#1a252f"
+        android:backgroundTint="#1a252f"
+        android:textColor="#ffff"
         android:text="Authenticate" />
 
 </LinearLayout>

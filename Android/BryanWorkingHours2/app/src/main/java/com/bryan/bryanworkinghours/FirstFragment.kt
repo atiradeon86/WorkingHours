@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import com.bryan.bryanworkinghours.databinding.FragmentFirstBinding
 
@@ -27,13 +28,32 @@ class FirstFragment : Fragment() {
     ): View? {
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
+
         return binding.root
+
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val myWebView: WebView = view.findViewById(R.id.webview)
+
+
+
+        myWebView?.let {
+            // Example: Set the height to 500 pixels
+            val newHeightInPixels = 2090
+
+            // Adjust the layout parameters of the WebView
+            val params = it.layoutParams as LinearLayout.LayoutParams
+            params.height = newHeightInPixels
+            it.layoutParams = params
+
+            // Load a URL into the WebView (replace with your desired URL)
+            it.settings.javaScriptEnabled = true
+            it.loadUrl("https://www.example.com")
+        }
+
 
 
         myWebView.loadUrl("https://apps.bryan86.hu")

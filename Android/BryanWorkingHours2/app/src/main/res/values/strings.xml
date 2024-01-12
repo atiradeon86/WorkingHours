@@ -2,7 +2,7 @@
     <string name="app_name">Bryan Working Hours</string>
     <string name="title_activity_bryan_web_view">BryanWebView</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
+    <string name="first_fragment_label">Bryan WorkingHours</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
