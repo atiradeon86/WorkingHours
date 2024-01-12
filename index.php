@@ -106,10 +106,10 @@ $.ajax({
                         if (hoursinner != null) {
                             hoursinner.remove();
                         }
-                        var reason = info.event.extendedProps.Reason;
+                        var reason2 = info.event.extendedProps.Reason;
                         var showreason="";
-                        if (reason != "") {
-                            showreason= " (" + reason + ")";
+                        if ((reason2 != "")) {
+                            showreason= " (" + reason2 + ")";
                         }
                          else {
                             showreason="";
@@ -193,11 +193,12 @@ $.ajax({
                                     ,
                                     });
                                  });
-                                 //console.log(EditData[0].StartTime.date);
+                                 //console.log(EditData[0].work_reason);
                                  var title = (EditData[0].title);
                                  var event_id = (EditData[0].event_id);
                                  var color = (EditData[0].color);
                                  var reason = (EditData[0].work_reason);
+                                 console.log(reason);
                                  var start = (EditData[0].start.date);
                                 
                                  var end = (EditData[0].end.date);
@@ -215,13 +216,13 @@ $.ajax({
                                 startTimeSplitfinal = starTtimeSplit[1].split(".");
                                 //console.log(startTimeSplitfinal[0])
                                 $("#SubmitEvent").prop('id','SaveEditedEvent');
-                                console.log(id);
+                                //console.log(id);
                                 $('input[name="work_id"]').val(id);
                                
                                 $('input[name="work_name"]').val(title);
                                  $('input[name="color"]').val(color);
                                  $('input[name="url"]').val(link);
-                                 $('#reason').val(reason);
+                                 $("#reason option[value='" + reason + "']").prop('selected', true);
                                  $('input[name="start_date"]').val(startSplit[0]);
                                  $('input[name="start_time"]').val(startTimeSplitfinal[0]);
                                  $('input[name="end_time"]').val(EndTimeSplitfinal[0]);
@@ -463,10 +464,10 @@ $.ajax({
                                     <div class="form-group">
                                     <label for "reason">Work Reason</label>
                                     <select class="form-control" name="reason" id="reason">
-                                        <option>Please Select</option>
-                                        <option>HomeOffice</option>
-                                        <option>Urlaub</option>
-                                        <option>Zeitausgleich</option>
+                                        <option value="">Please Select</option>
+                                        <option value="HomeOffice">HomeOffice</option>
+                                        <option value="Urlaub">Urlaub</option>
+                                        <option value="Zeitausgleich">Zeitausgleich</option>
                                     </select>
                                 </div>
                             </div>
