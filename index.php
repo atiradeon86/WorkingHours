@@ -76,10 +76,12 @@ $.ajax({
                         StartTime: result[i].StartTime,
                         EndTime: result[i].EndTime,
                         Id: result[i].id,
+                        Reason: result[i].work_reason,
+                        Color: result[i].color,
                     },
                 });
             });
-            //console.log(events);
+            console.log(events);
             
                 var calendarEl = document.getElementById('calendar');
                 var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -104,8 +106,18 @@ $.ajax({
                         if (hoursinner != null) {
                             hoursinner.remove();
                         }
+                        var reason = info.event.extendedProps.Reason;
+                        var showreason="";
+                        if (reason != "") {
+                            showreason= " (" + reason + ")";
+                        }
+                         else {
+                            showreason="";
+                         }
+                         var color = info.event.extendedProps.Color;
+                         //console.log(color);
                         var hours = document.getElementById('hours');
-                        var hoursdata = "<div id='hs'><i class='bi bi-clock-fill' style='margin-right:30px;'></i>" + startsplitfinal[0] +  "-"+  endsplitfinal[0] +
+                        var hoursdata = "<div id='hs'><i class='bi bi-clock-fill' style='margin-right:30px;'></i>" + startsplitfinal[0] +  "-"+  endsplitfinal[0] + "<span id='reason' style='color:" + color + "!important;'>"  + showreason + "</span>" + 
                         "<form action='' method='post' id='EditEvent'><input type='submit' class='btn btn-primary' id='edit' class=" + eventId +" value='Edit'><div id='edit-id' style='display:none;'>" + eventId + "</div></form></div>";
                         hours.innerHTML += hoursdata
                     

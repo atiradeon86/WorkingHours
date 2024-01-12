@@ -8,7 +8,7 @@ require_once './db-connect.php';
 if (!empty($_GET['cmd']) && $_GET['cmd'] == 'listworks') {
 
 // Fetch events from database 
-$sql = "SELECT id,event_name,color,link,start_date,end_date,StartTime,EndTime FROM dbo.WorkingHours"; 
+$sql = "SELECT id,event_name,color,link,color,work_reason,start_date,end_date,StartTime,EndTime FROM dbo.WorkingHours"; 
 #$result = $conn->query($sql);  
 $result = sqlsrv_query( $conn, $sql);
 
