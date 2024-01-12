@@ -85,7 +85,7 @@ $.ajax({
             
                 var calendarEl = document.getElementById('calendar');
                 var calendar = new FullCalendar.Calendar(calendarEl, {
-                    height: 650,
+                    height: 610,
                     eventClick: function(info) {
 
                        var hoursinner = document.getElementById('hs');
@@ -248,6 +248,7 @@ $.ajax({
     #calendar {
 
        margin: 0 auto;
+       width: 1200px;
      
 
     }
@@ -334,6 +335,7 @@ $.ajax({
         background-image: url(./img/trogroup-logo.png); 
         width: 300px; height: 110px;
         background-repeat: no-repeat;
+        margin: 0 auto;
     }
     .fc-toolbar-title {
         font-size: 18px;
@@ -349,8 +351,8 @@ $.ajax({
     }
     #calendar {
       
+       width: 350px;
      
-       height: 600px;
 
     }
 
