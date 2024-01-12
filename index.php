@@ -128,7 +128,7 @@ $.ajax({
                     end: 'prev,next,today',
                 },
                 selectable: true,
-                editable: true,
+                editable: false,
                 firstDay: 1,
                 displayEventTime: false,
                 locale: 'de',
