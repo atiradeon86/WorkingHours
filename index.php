@@ -32,9 +32,22 @@ error_reporting(E_ALL);
    
 }
 
+$( document ).ready(function() {
 
+$('body').on( 'submit', '#SaveEditedEvent', function(e) {
 
+$.ajax({
+                type: "POST",
+                url: "functions.php?cmd=SaveEditedEvent",
+                data: $(this).serialize(),
+                success : function(data) {
+                    $('#AddNewWork').modal('hide');                                
+                    
+                },
 
+            });
+        });
+});
     
     function getAllEvent()
     {
@@ -70,7 +83,7 @@ error_reporting(E_ALL);
             
                 var calendarEl = document.getElementById('calendar');
                 var calendar = new FullCalendar.Calendar(calendarEl, {
-                    height: 860,
+                    height: 650,
                     eventClick: function(info) {
 
                        var hoursinner = document.getElementById('hs');
@@ -92,15 +105,15 @@ error_reporting(E_ALL);
                             hoursinner.remove();
                         }
                         var hours = document.getElementById('hours');
-                        var hoursdata = "<div id='hs'><br><i class='bi bi-clock-fill' style='margin-right:30px;'></i>" + startsplitfinal[0] +  "-"+  endsplitfinal[0] +
-                        "<form action='' method='post' id='EditEvent'><input type='submit' class='btn btn-primary' id='edit' style='display:block;' event=" + eventId +" value='Edit'><div id='edit-id' style='display:none;'>" + eventId + "</div></form></div>";
+                        var hoursdata = "<div id='hs'><i class='bi bi-clock-fill' style='margin-right:30px;'></i>" + startsplitfinal[0] +  "-"+  endsplitfinal[0] +
+                        "<form action='' method='post' id='EditEvent'><input type='submit' class='btn btn-primary' id='edit' class=" + eventId +" value='Edit'><div id='edit-id' style='display:none;'>" + eventId + "</div></form></div>";
                         hours.innerHTML += hoursdata
                     
                 },
                 headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth',
+                    start: 'title',
+                    center: '',
+                    end: 'prev,next,today',
                 },
                 selectable: true,
                 editable: true,
@@ -123,6 +136,11 @@ error_reporting(E_ALL);
     getAllEvent();
 
     $(document).ready(function(){
+
+
+
+       
+
     $('body').on( 'submit', '#SubmitEvent', function(e) {
                    
                         $.ajax({
@@ -184,7 +202,10 @@ error_reporting(E_ALL);
                                 starTtimeSplit = StartTime.split(" ");
                                 startTimeSplitfinal = starTtimeSplit[1].split(".");
                                 //console.log(startTimeSplitfinal[0])
-                                 
+                                $("#SubmitEvent").prop('id','SaveEditedEvent');
+                                console.log(id);
+                                $('input[name="work_id"]').val(id);
+                               
                                 $('input[name="work_name"]').val(title);
                                  $('input[name="color"]').val(color);
                                  $('input[name="url"]').val(link);
@@ -203,24 +224,35 @@ error_reporting(E_ALL);
 
 </script>
 <style>
-    #wrapper {
+
+
+#wrapper {
         display: block;
         position: relative;
-        margin-top: 100px;
+        margin-top: 20px;
+        
     }
     #calendar {
-       margin-top: 90px;
+
+       margin: 0 auto;
+     
 
     }
+
+    .btn-primary,.btn-secondary {
+        font-size: 30px;
+    }
+
     body {
         background: #333741;
         color: white;
     }
     #hours {
         font-size:40px;
+        text-align: center;
     }
     .fc-daygrid-day-number, .fc .fc-col-header-cell-cushion {
-        font-size:40px;
+        font-size:18px;
         text-align: center;
         margin:0 auto 0 auto;
     }
@@ -285,11 +317,117 @@ error_reporting(E_ALL);
         color: #1a252f;
     }
 
+    #logo {
+        background-image: url(./img/trogroup-logo.png); 
+        width: 300px; height: 110px;
+        background-repeat: no-repeat;
+    }
+    .fc-toolbar-title {
+        font-size: 18px;
+    }
+
+@media only screen and (max-width: 1024px) {
+
+        
+#wrapper {
+        display: block;
+        position: relative;
+        margin-top: 0px!important;
+    }
+    #calendar {
+      
+     
+       height: 600px;
+
+    }
+
+    .btn-primary,.btn-secondary {
+        font-size: 24px;
+    }
+
+    body {
+        background: #333741;
+        color: white;
+    }
+    #hours {
+        font-size:24px;
+        text-align: center;
+    }
+    .fc-daygrid-day-number, .fc .fc-col-header-cell-cushion {
+        font-size:18px;
+        text-align: center;
+        margin:0 auto 0 auto;
+    }
+    .fc .fc-col-header-cell-cushion {
+        padding:4px 4px;
+    }
+    .fc-h-event .fc-event-main, .fc-daygrid-event-harness {
+     
+        color: #1a252f;
+        background: #1a252f;
+        display: block;
+    }
+  
+    .fc .fc-highlight {
+        color: white;
+        background: #1a252f;
+        
+    }
+    .fc-day-today{
+        background: #364552!Important;
+    }
+    .fc-theme-standard th {
+        background: #1a252f;
+    }
+    .fc-icon {
+        width: 2em;
+        background: #1a252f;
+        border-color: #1a252f;
+    }
+    .fc .fc-button-primary,.fc .fc-button-primary:disabled {
+        background: #1a252f;
+    }
+    .fc .fc-button-primary:disabled {
+        font-size: 18px;
+    }
+    .modal-content {
+        background: #1a252f;
+        border: red;
+    }
+    .modal-header {
+    border-bottom: 0 none;
+    }
+    .form-control  {
+       
+    }
+    select.form-control {
+        height: 50px!IMportant; 
+
+        display: block;
+    }
+
+    .modal-footer {
+        margin-top: 20px!Important;
+    }
+
+    .fc-direction-ltr .fc-daygrid-event.fc-event-end {
+     
+        color: #1a252f;
+    }
+
+    .fc-daygrid-event-dot {
+        color: #1a252f;
+    }
+    #logo { display: none; }
+    }
+ 
+
 </style>
+<meta content="width=device-width, initial-scale=1" name="viewport" />
 </head>
   <body>
     <div id="wrapper">
-        <div id ="logo" style="background-image: url(./img/trogroup-logo.png); width: 300px; height: 110px; margin: 0 auto; background-repeat: no-repeat;"></div>
+        <div id ="logo"></div>
         <div id ="calendar"></div>
         <div id="hours"></div>
     </div>
@@ -353,13 +491,14 @@ error_reporting(E_ALL);
                                 <div class="col-sm-6">
                                         <div class="form-group">
                                         <label for "Color">Color</label>
-                                        <input type="color" name="color" value="#1a252f" class="form-control" />
+                                        <input type="color" name="color" value="#007bff" class="form-control" />
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                         <div class="form-group">
                                         <label for "time">Url</label>
                                         <input type="text" name="url" id="url" class="form-control">
+                                        <input type="hidden" name ="work_id" id="work_id">
                                     </div>
                                 </div>
                             </div>
