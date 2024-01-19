@@ -1,3 +1,75 @@
+<html>
+<head>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+$( document ).ready(function() {
+
+$('body').on( 'submit', '#SearchEvent', function(e) {
+e.preventDefault();
+var SearchData = new Array();
+var start= $('input[name="start_date"]').val();
+var end= $('input[name="end_date"]').val();
+
+$.ajax({
+    
+                type: "POST",
+                url: "handler.php?cmd=searchwork&start=" + start + "&end=" +end,
+                dataType : "json",
+                success : function(data) {
+                    var result = data;      
+                    var ResultDiv = $("#ContentDiv");
+                    ResultDiv.empty();
+                    $.each(result, function(i, item) {
+                                    SearchData.push({
+                                        WorkDay: result[i].Workday,
+                                        StartTime: result[i].StartTime,
+                                        EndTime: result[i].EndTime,
+                                        WorkingHours: result[i].WorkingHours,
+                                        work_reason: result[i].work_reason,
+                                    });
+                                 });    
+                                 console.log(SearchData);      
+                                 var workreason ="";
+                                 $.each(SearchData, function(index, workObject){
+                                  if ( workObject.work_reason != "") {
+                                    workreason = workObject.work_reason  + "</p>";
+                                  } 
+                                    else{
+                                        workreason="";
+                                    }
+                                  
+                                    var content = "<p><span class='ptitle'>WorkDay:</span>" + workObject.WorkDay + "<br>"+
+                                                "<span class='ptitle'>StartTime:</span> " + workObject.StartTime +"<br>"+
+                                                "<span class='ptitle'>EndTime:</span> " + workObject.EndTime + "<br>"+
+                                                "<span class='ptitle'>WorkingHours:</span> " + workObject.WorkingHours + "<br>"+
+                                                workreason + "</p>";
+                                                ResultDiv.append(content);
+                                                $("#send").removeAttr("style").show();
+                                });             
+                    
+                },
+
+            });
+        });
+});
+    
+</script>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+<style>
+body {
+    background: #333741;
+    color: white;
+}
+.ptitle {
+    display: block;
+    color: #007bff;
+}
+
+</style>
+<body>
 <?php
 require_once '../db-connect.php'; 
 
@@ -73,6 +145,32 @@ $suma = "All Hours (With -30 minute break): $sumAccounting";
 $resultString .= $sum;
 $resultString .= $suma;
 
-print_r($resultString);
+#print_r($resultString);
 
 ?>
+<div id="search" style="width: 700px; margin: 0 auto; text-align:center; position: relative; display:block;" >
+    <form action="" method="post" id="SearchEvent">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for "start_date">Start Date</label>
+                        <input type="date" name="start_date" id="start_date" class="form-control clear-form">
+                    </div>
+            </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for "end_date">End Date</label>
+                        <input type="date" name="end_date" id="end_date" class="form-control clear-form">
+                    </div>
+            </div>              
+        </div>
+        <div class="modal-footer"> 
+            <button type="submit" class="btn btn-primary" id="edit">Search</button>
+            <button type="submit" style="display:none;" class="btn btn-secondary" id="send">Send E-mail</button>
+        </div>
+    </form>
+</div>
+<div id="ContentDiv"></div>
+</body>
+</html>
