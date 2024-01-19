@@ -5,6 +5,13 @@
 <script type="text/javascript">
 $( document ).ready(function() {
 
+$("#send").click(function() {
+    var content = $('#ContentDiv').html();
+    alert(content);
+});
+
+
+
 $('body').on( 'submit', '#SearchEvent', function(e) {
 e.preventDefault();
 var SearchData = new Array();
@@ -187,9 +194,10 @@ $resultString .= $suma;
         </div>
         <div class="modal-footer"> 
             <button type="submit" class="btn btn-primary" id="edit">Search</button>
-            <button type="submit" style="display:none;" class="btn btn-secondary" id="send">Send E-mail</button>
+            <button style="display:none;" class="btn btn-secondary" id="send">Send E-mail</button>
+        </form>
         </div>
-    </form>
+    
 </div>
 <div id="Sum"></div>
 <div id="ContentDiv"></div>
