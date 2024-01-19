@@ -19,6 +19,8 @@ $.ajax({
                 success : function(data) {
                     var result = data;      
                     var ResultDiv = $("#ContentDiv");
+                    var SumDiv = $("#Sum");
+                    SumDiv.empty();
                     ResultDiv.empty();
                     $.each(result, function(i, item) {
                                     SearchData.push({
@@ -31,7 +33,10 @@ $.ajax({
                                  });    
                                  console.log(SearchData);      
                                  var workreason ="";
+                                 var totalWorkingHours = 0;
                                  $.each(SearchData, function(index, workObject){
+                                    totalWorkingHours += workObject.WorkingHours;
+                                    
                                   if ( workObject.work_reason != "") {
                                     workreason = workObject.work_reason  + "</p>";
                                   } 
@@ -39,14 +44,15 @@ $.ajax({
                                         workreason="";
                                     }
                                   
-                                    var content = "<p><span class='ptitle'>WorkDay:</span>" + workObject.WorkDay + "<br>"+
-                                                "<span class='ptitle'>StartTime:</span> " + workObject.StartTime +"<br>"+
-                                                "<span class='ptitle'>EndTime:</span> " + workObject.EndTime + "<br>"+
-                                                "<span class='ptitle'>WorkingHours:</span> " + workObject.WorkingHours + "<br>"+
+                                    var content = "<p><span class='WorkDay'>" + workObject.WorkDay + "</span><br>"
+                                                  + workObject.StartTime +"-" +  workObject.EndTime + "<br>"+
+                                                    "<span class='WorkingHours'>" +workObject.WorkingHours +  " Hour</span><br>"+
                                                 workreason + "</p>";
                                                 ResultDiv.append(content);
                                                 $("#send").removeAttr("style").show();
-                                });             
+                                });     
+                               //console.log(totalWorkingHours);   
+                                SumDiv.append("Total Hours: " + totalWorkingHours);   
                     
                 },
 
@@ -63,9 +69,21 @@ body {
     background: #333741;
     color: white;
 }
-.ptitle {
-    display: block;
+.WorkDay {
+    font-size: 18px;
     color: #007bff;
+}
+.ptitle {
+    color: #007bff;
+}
+
+.WorkingHours {
+    color: green;
+}
+#sum {
+    display: block;
+    position: relative;
+    margin-bottom: 20px;
 }
 
 </style>
@@ -171,6 +189,7 @@ $resultString .= $suma;
         </div>
     </form>
 </div>
+<div id="Sum"></div>
 <div id="ContentDiv"></div>
 </body>
 </html>

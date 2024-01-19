@@ -36,12 +36,23 @@ $r = sqlsrv_query( $conn, $sql);
 
 
 while( $row = sqlsrv_fetch_array( $r, SQLSRV_FETCH_ASSOC )) {
-    $Reault[]= $row;
+    $Result[]= $row;
 }
 
-#file_put_contents('debug.txt', print_r($Reault, true)); 
+#Remove 0,5 hour break
 
- echo json_encode($Reault);
+foreach ($Result as $key => $item) {
+    foreach ($item as $subKey => $value) {
+        if ($subKey === 'WorkingHours') {
+            $Result[$key][$subKey] = $value - 0.50;
+        }
+    }
+}
+
+
+#file_put_contents('debug.txt', print_r($Result, true)); 
+
+ echo json_encode($Result);
 
 
 }
