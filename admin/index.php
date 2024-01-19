@@ -38,7 +38,7 @@ $.ajax({
                                     totalWorkingHours += workObject.WorkingHours;
                                     
                                   if ( workObject.work_reason != "") {
-                                    workreason = workObject.work_reason  + "</p>";
+                                    workreason =  "<span class='reason'>" +workObject.work_reason  + "</span></p>";
                                   } 
                                     else{
                                         workreason="";
@@ -85,7 +85,9 @@ body {
     position: relative;
     margin-bottom: 20px;
 }
-
+span.reason {
+    color: red;
+}
 </style>
 <body>
 <?php
