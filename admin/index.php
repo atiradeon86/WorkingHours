@@ -6,10 +6,19 @@
 $( document ).ready(function() {
 
 $("#send").click(function() {
+    var total = $('#Sum').html();
     var content = $('#ContentDiv').html();
-    alert(content);
-});
+    //alert(content);
 
+    $.ajax({
+                type: "POST",
+                url: "handler.php?cmd=sendemail",
+                data: {emailtext: content, totaldiv : total },
+                success : function(data) {                        
+                },
+
+            });
+        });
 
 
 $('body').on( 'submit', '#SearchEvent', function(e) {
@@ -95,6 +104,12 @@ body {
 span.reason {
     color: red;
 }
+#logo {
+        background-image: url(../img/trogroup-logo.png); 
+        width: 300px; height: 110px;
+        background-repeat: no-repeat;
+        margin: 0 auto;
+    }
 </style>
 <body>
 <?php
@@ -175,31 +190,34 @@ $resultString .= $suma;
 #print_r($resultString);
 
 ?>
-<div id="search" style="width: 700px; margin: 0 auto; text-align:center; position: relative; display:block;" >
-    <form action="" method="post" id="SearchEvent">
-        <div class="modal-body">
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label for "start_date">Start Date</label>
-                        <input type="date" name="start_date" id="start_date" class="form-control clear-form">
-                    </div>
+<div id="wrapper">
+    <div id ="logo"></div>
+    <div id="search" style="width: 700px; margin: 0 auto; text-align:center; position: relative; display:block;" >
+        <form action="" method="post" id="SearchEvent">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for "start_date">Start Date</label>
+                            <input type="date" name="start_date" id="start_date" class="form-control clear-form">
+                        </div>
+                </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for "end_date">End Date</label>
+                            <input type="date" name="end_date" id="end_date" class="form-control clear-form">
+                        </div>
+                </div>              
             </div>
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label for "end_date">End Date</label>
-                        <input type="date" name="end_date" id="end_date" class="form-control clear-form">
-                    </div>
-            </div>              
-        </div>
-        <div class="modal-footer"> 
-            <button type="submit" class="btn btn-primary" id="edit">Search</button>
-            <button style="display:none;" class="btn btn-secondary" id="send">Send E-mail</button>
-        </form>
-        </div>
-    
+            <div class="modal-footer"> 
+                <button type="submit" class="btn btn-primary" id="edit">Search</button>
+                <button style="display:none;" class="btn btn-secondary" id="send">Send E-mail</button>
+            </form>
+            </div>
+        
+    </div>
+    <div id="Sum"></div>
+    <div id="ContentDiv"></div>
 </div>
-<div id="Sum"></div>
-<div id="ContentDiv"></div>
 </body>
 </html>

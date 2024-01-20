@@ -1,4 +1,13 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
+
+require '../phpmailer/Exception.php';
+require '../phpmailer/PHPMailer.php';
+require '../phpmailer/SMTP.php';
+
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -6,7 +15,7 @@ error_reporting(E_ALL);
 require_once '../db-connect.php'; 
 
 if (!empty($_GET['cmd']) && $_GET['cmd'] == 'searchwork') {
- file_put_contents('debugsearch.txt', print_r($_GET, true));
+ #file_put_contents('debugsearch.txt', print_r($_GET, true));
 
  
  $startdate = $_GET['start'];
@@ -55,6 +64,57 @@ foreach ($Result as $key => $item) {
  echo json_encode($Result);
 
 
+} elseif ( (!empty($_GET['cmd']) && $_GET['cmd'] == 'sendemail'))  {
+    
+    
+    $MailHeader = $_POST['totaldiv'];
+    $MailBody = $_POST['emailtext'];
+    #file_put_contents('email.txt', print_r($MailBody, true));
+
+    $message = $MailHeader;
+    $message .= $MailBody;
+    
+    file_put_contents('email.txt', print_r($message, true));
+    #Sending mail
+
+    #
+    $mail = new PHPMailer(true);
+
+    try {
+        //Server settings
+        $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+        $mail->isSMTP();                                            //Send using SMTP
+        $mail->Host       = 'email-smtp.us-east-2.amazonaws.com';                     //Set the SMTP server to send through
+        $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+        $mail->Username   = 'AKIAUBBUHY3VTRGANKHI';                     //SMTP username
+        $mail->Password   = 'BGBX5EEVhSjvsRADNoxm/L2A8vDuwxDtSfYmhJTtscTg';                               //SMTP password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+        $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+    
+        //Recipients
+        $mail->setFrom('horvathat@bryan86.hu', 'Mailer');
+        $mail->addAddress('atiradeon86@gmail.com', 'Attila Horvath');     //Add a recipient
+        $mail->addReplyTo('horvathat@bryan86.hu', 'Attila Horvath');
+        #$mail->addCC('cc@example.com');
+        #$mail->addBCC('bcc@example.com');
+    
+        //Attachments
+        #$mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
+        #$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
+    
+        //Content
+        $mail->isHTML(true);                                  //Set email format to HTML
+        $mail->Subject = 'Working Hours - Attila Horvath';
+        $mail->Body    = "$message";
+        $mail->AltBody = '-';
+    
+        $mail->send();
+        echo 'Message has been sent';
+    } catch (Exception $e) {
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        file_put_contents('email.txt', $mail->ErrorInfo);
+    }
+    
 }
 
 
