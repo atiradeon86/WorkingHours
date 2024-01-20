@@ -61,7 +61,7 @@ $.ajax({
                                         workreason="";
                                     }
                                   
-                                    var content = "<p><span class='WorkDay'>" + workObject.WorkDay + "</span><br>"
+                                    var content = "<p style='text-align:center; display:block; position: relative;'><span class='WorkDay'>" + workObject.WorkDay + "</span><br>"
                                                   + workObject.StartTime +"-" +  workObject.EndTime + "<br>"+
                                                     "<span class='WorkingHours'>" +workObject.WorkingHours +  " Hour</span><br>"+
                                                 workreason + "</p>";
@@ -69,7 +69,8 @@ $.ajax({
                                                 $("#send").removeAttr("style").show();
                                 });     
                                //console.log(totalWorkingHours);   
-                                SumDiv.append("Total Hours: " + totalWorkingHours);   
+                               let totalWorkingHoursRounded = totalWorkingHours.toFixed(2);
+                                SumDiv.append("Total Hours: " + totalWorkingHoursRounded);   
                     
                 },
 
@@ -85,6 +86,8 @@ $.ajax({
 body {
     background: #333741;
     color: white;
+    text-align: center;
+    margin: 0 auto;
 }
 .WorkDay {
     font-size: 18px;
@@ -97,10 +100,15 @@ body {
 .WorkingHours {
     color: green;
 }
-#sum {
+#sum.sum {
     display: block;
     position: relative;
     margin-bottom: 20px;
+    font-size: 18px;
+}
+div.worker {
+    color: green;
+    font-size: 18px;
 }
 span.reason {
     color: red;
@@ -217,7 +225,8 @@ $resultString .= $suma;
             </div>
         
     </div>
-    <div id="Sum"></div>
+    <div class="worker">Worker: Attila Horvath</div>
+    <div id="Sum" class="sum" style ="display: block;position: relative;margin-bottom: 20px; font-size: 18px;"></div>
     <div id="ContentDiv"></div>
 </div>
 </body>

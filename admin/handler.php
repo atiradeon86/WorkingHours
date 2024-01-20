@@ -2,10 +2,14 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 
 require '../phpmailer/Exception.php';
 require '../phpmailer/PHPMailer.php';
 require '../phpmailer/SMTP.php';
+require_once '../dompdf/autoload.inc.php';
 
 
 ini_set('display_errors', 1);
@@ -67,14 +71,86 @@ foreach ($Result as $key => $item) {
 } elseif ( (!empty($_GET['cmd']) && $_GET['cmd'] == 'sendemail'))  {
     
     
-    $MailHeader = $_POST['totaldiv'];
+
+#style
+#$imageData = base64_encode(file_get_contents('../img/trogroup-logo.png'));
+$style="
+<html>
+<head>
+<style>
+body {
+    background: #333741;
+    color: white;
+    text-align: center;
+}
+.WorkDay {
+    font-size: 18px;
+    color: #007bff;
+}
+.ptitle {
+    color: #007bff;
+}
+
+.WorkingHours {
+    color: green;
+}
+#sum {
+    display: block;
+    position: relative;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+span.reason {
+    color: red;
+}
+#logo {
+        width: 300px; height: 110px;
+        background-repeat: no-repeat;
+        margin: 0 auto;
+}
+</style>
+</head>
+<body>
+    <div id ='logo'><img src='https://apps.bryan86.hu/trogroup-app/img/trogroup-logo.png'/></div><div class='worker' style='color: green;font-size: 18px;text-align: center;'>Worker: Attila Horvath</div>";
+  
+    $MailHeader= $style;
+    $MailHeader.=" <div id='Sum' class='sum' style ='display: block;position: relative;margin-bottom: 20px; font-size: 18px; text-align:center;'>";
+    $MailHeader .= $_POST['totaldiv'];
+    $MailHeader .= "</div>";
     $MailBody = $_POST['emailtext'];
+    $MailFooter = "
+    <body>
+    </html>
+    ";
     #file_put_contents('email.txt', print_r($MailBody, true));
 
     $message = $MailHeader;
     $message .= $MailBody;
+    $message .= $MailFooter;
+
+    $today = date("Y-m-d"); 
+    file_put_contents("email-log-$today.txt", print_r($message, true));
     
-    file_put_contents('email.txt', print_r($message, true));
+    #Generate PDF
+    
+    $dompdf = new Dompdf();
+
+    $dompdf->loadHtml($message);
+    $dompdf->set_option('isRemoteEnabled',true);
+    // (Optional) Setup the paper size and orientation
+    $dompdf->setPaper('A4', 'portrait');
+
+    // Render the HTML as PDF
+    $dompdf->render();
+
+    // Output the generated PDF to Browser
+    #$dompdf->stream();
+
+    $output = $dompdf->output();
+    
+    file_put_contents("pdf/Attila-Horvath-$today.pdf", $output);
+
+    
     #Sending mail
 
     #
@@ -99,7 +175,7 @@ foreach ($Result as $key => $item) {
         #$mail->addBCC('bcc@example.com');
     
         //Attachments
-        #$mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
+        $mail->addAttachment("/var/www/bryan86.hu/web/trogroup/admin/pdf/Attila-Horvath-$today.pdf");         //Add attachments
         #$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
     
         //Content
@@ -114,7 +190,7 @@ foreach ($Result as $key => $item) {
         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         file_put_contents('email.txt', $mail->ErrorInfo);
     }
-    
+
 }
 
 
