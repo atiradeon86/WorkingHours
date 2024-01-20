@@ -14,7 +14,8 @@ $("#send").click(function() {
                 type: "POST",
                 url: "handler.php?cmd=sendemail",
                 data: {emailtext: content, totaldiv : total },
-                success : function(data) {                        
+                success : function(data) {
+                    alert('E-mail sent! :)');                        
                 },
 
             });
